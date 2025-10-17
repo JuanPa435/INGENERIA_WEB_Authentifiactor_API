@@ -1,77 +1,194 @@
-/* Estilo general */
 body {
-  font-family: "Segoe UI", Roboto, sans-serif;
-  background: linear-gradient(135deg, #0072ff, #00c6ff);
-  margin: 0;
-  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
 }
 
 .container {
-  width: 100%;
-  max-width: 800px;
-  margin-top: 40px;
-  background-color: #ffffff;
-  border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-}
-
-h1 {
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  width: 350px;
   text-align: center;
-  color: #0072ff;
+  animation: fadeIn 0.4s ease;
 }
 
-.card {
-  margin-top: 25px;
-  padding: 20px;
-  border: 1px solid #e3e3e3;
-  border-radius: 12px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 h2 {
   color: #333;
+  margin-bottom: 1rem;
 }
 
-input {
-  display: block;
+/* Nuevo layout de autenticación */
+.auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.auth-card {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  padding: 28px;
+  width: 380px;
+}
+
+.auth-title {
+  font-size: 20px;
+  margin: 0 0 12px 0;
+  color: #2d3748;
+}
+
+.auth-form .form-group { margin-bottom: 12px; text-align: left; }
+.auth-form label { font-size: 13px; color: #4a5568; display: block; margin-bottom: 6px; }
+.auth-form input, .auth-form select { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #e2e8f0; }
+.primary-btn { width: 100%; padding: 10px 12px; border-radius: 8px; background: #5a67d8; color: white; border: none; cursor: pointer; }
+.auth-footer { margin-top: 12px; text-align: center; font-size: 14px; }
+.form-message { margin-top: 8px; font-size: 13px; }
+
+.icon-btn { position: absolute; right: 10px; top: 36px; background: transparent; border: none; cursor: pointer; padding: 6px; border-radius: 6px; }
+.icon-btn svg { display: block; }
+
+.password-field { position: relative; }
+.password-field input { padding-right: 44px; }
+
+input, select {
   width: 100%;
-  margin-bottom: 12px;
-  padding: 10px;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 10px;
   font-size: 15px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-field input {
+  padding-right: 44px; /* espacio para el icono */
+}
+
+.password-field .toggle-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.04);
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  opacity: 0.9;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  line-height: 1;
+  outline: none;
+}
+
+.password-field .toggle-btn:hover {
+  opacity: 1;
 }
 
 button {
-  width: 100%;
-  padding: 10px;
-  background-color: #0072ff;
+  background-color: #667eea;
   color: white;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
+  padding: 12px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: 0.3s;
+  font-size: 16px;
+  width: 100%;
+  transition: background-color 0.3s;
 }
 
 button:hover {
-  background-color: #005ecb;
+  background-color: #5a67d8;
 }
 
-ul {
-  list-style: none;
+p {
+  margin-top: 1rem;
+  font-size: 14px;
+}
+
+a {
+  color: #764ba2;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+#login-message, #register-message {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+/* --- Overrides para inputs con iconos (mejora de layout) --- */
+.input-with-icon, .input-left-icon {
+  position: relative;
+}
+
+/* tamaño uniforme de inputs */
+.auth-form input, .auth-form select, .input-with-icon input, .input-left-icon input {
+  height: 44px;
+  padding: 10px 12px;
+  box-sizing: border-box;
+}
+
+/* icono a la derecha (ej. correo) */
+.input-with-icon .icon-right {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none; /* no interfiere con el input */
+  opacity: 0.9;
+}
+
+/* icono/btn a la izquierda dentro del input (ojo) */
+.input-left-icon .icon-left {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 0;
-  margin: 0;
+  color: #4a5568;
 }
 
-li {
-  padding: 8px 10px;
-  background-color: #f4f4f4;
-  margin-top: 6px;
-  border-radius: 8px;
-}
+/* asegurar espacio interno para iconos */
+.input-left-icon input { padding-left: 40px; }
+.input-with-icon input { padding-right: 40px; }
+
+/* pequeños ajustes visuales */
+.icon-left svg, .icon-right svg { display: block; }
+.icon-left:focus { outline: none; box-shadow: 0 0 0 3px rgba(90,103,216,0.12); border-radius: 6px; }
+
+/* evitar que botones globales tomen el estilo de .primary-btn */
+.icon-btn, .icon-left { background: transparent; border: none; }
+

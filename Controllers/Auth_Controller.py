@@ -1,29 +1,69 @@
 from flask import Blueprint, request, jsonify
-from Services.Auth_Service import AuthService
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from Models.User_Model import User
+from Models.database import db
 
-auth_bp = Blueprint('auth_bp', __name__)
+auth_bp = Blueprint("auth_bp", __name__)
 
 # Registro de usuario
-@auth_bp.route('/register', methods=['POST'])
+@auth_bp.route("/register", methods=["POST"])
 def register():
-    data = request.get_json()
-    email = data.get('email')
-    password = data.get('password')
-    role = data.get('role', 'cliente')
-    return AuthService.register_user(email, password, role)
+    try:
+        data = request.get_json()
+        email = data.get("email")
+        password = data.get("password")
+        role = data.get("role", "cliente")
+
+        if not email or not password:
+            return jsonify({"msg": "Faltan campos obligatorios"}), 400
+
+        if User.query.filter_by(email=email).first():
+            return jsonify({"msg": "El usuario ya existe"}), 400
+
+        new_user = User(email=email, role=role)
+        new_user.set_password(password)
+        
+        db.session.add(new_user)
+        db.session.commit()
+
+        return jsonify({
+            "msg": "Usuario registrado correctamente",
+            "user": new_user.to_dict()
+        }), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"msg": f"Error al registrar: {str(e)}"}), 500
+
 
 # Inicio de sesión
-@auth_bp.route('/login', methods=['POST'])
+@auth_bp.route("/login", methods=["POST"])
 def login():
-    data = request.get_json()
-    email = data.get('email')
-    password = data.get('password')
-    return AuthService.login_user(email, password)
+    try:
+        data = request.get_json()
+        email = data.get("email")
+        password = data.get("password")
 
-# Ruta protegida (opcional, para prueba)
-@auth_bp.route('/me', methods=['GET'])
+        if not email or not password:
+            return jsonify({"msg": "Faltan campos obligatorios"}), 400
+
+        user = User.query.filter_by(email=email).first()
+
+        if user and user.check_password(password):
+            token = create_access_token(identity=user.to_dict())
+            return jsonify({
+                "msg": "Inicio de sesión exitoso",
+                "access_token": token,
+                "user": user.to_dict()
+            }), 200
+        else:
+            return jsonify({"msg": "Credenciales inválidas"}), 401
+    except Exception as e:
+        return jsonify({"msg": f"Error al iniciar sesión: {str(e)}"}), 500
+
+
+# Perfil (solo prueba)
+@auth_bp.route("/profile", methods=["GET"])
 @jwt_required()
-def me():
-    user = get_jwt_identity()
-    return jsonify({'user': user}), 200
+def profile():
+    current_user = get_jwt_identity()
+    return jsonify({"msg": "Perfil obtenido", "user": current_user}), 200

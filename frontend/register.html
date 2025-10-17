@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="auth-page">
+    <section class="auth-card">
+      <h1 class="auth-title">Crear cuenta</h1>
+
+      <form id="register-form" class="auth-form" autocomplete="on">
+        <div class="form-group input-with-icon">
+          <label for="reg-email">Correo electrónico</label>
+          <input type="email" id="reg-email" name="email" placeholder="tu@correo.com" required />
+          <div class="icon-right" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 7.2v9.6c0 .66.54 1.2 1.2 1.2h15.6c.66 0 1.2-.54 1.2-1.2V7.2L12 12 3 7.2z" stroke="#6b7280" stroke-width="0.6" fill="none" />
+              <path d="M21 6H3v-.6c0-.66.54-1.2 1.2-1.2h15.6c.66 0 1.2.54 1.2 1.2V6z" stroke="#6b7280" stroke-width="0.6" fill="none" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="form-group password-field">
+          <label for="reg-password">Contraseña</label>
+          <div class="input-left-icon">
+            <button type="button" id="toggle-reg-password" class="icon-left" aria-label="Mostrar contraseña" tabindex="0">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5z" stroke="#4a5568" stroke-width="1" fill="none" />
+                <circle cx="12" cy="12" r="3" fill="#4a5568" />
+              </svg>
+            </button>
+            <input type="password" id="reg-password" name="password" placeholder="********" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="reg-role">Rol</label>
+          <select id="reg-role" name="role" required>
+            <option value="cliente">Cliente</option>
+            <option value="admin">Administrador</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <button class="primary-btn" type="submit">Crear cuenta</button>
+        </div>
+
+        <div id="register-message" class="form-message" aria-live="polite"></div>
+      </form>
+
+      <div class="auth-footer">
+        <p>¿Ya tienes cuenta? <a href="login.html">Iniciar sesión</a></p>
+      </div>
+    </section>
+  </main>
+
+  <script src="auth.js"></script>
+</body>
+</html>

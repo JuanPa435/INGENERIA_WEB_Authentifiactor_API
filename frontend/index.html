@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de Usuarios - API Auth</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>🔐 Panel de Autenticación</h1>
+
+    <div class="card">
+      <h2>Iniciar Sesión</h2>
+      <input type="text" id="login-username" placeholder="Usuario" />
+      <input type="password" id="login-password" placeholder="Contraseña" />
+      <button id="login-btn">Entrar</button>
+    </div>
+
+    <div class="card">
+      <h2>Registro</h2>
+      <input type="text" id="register-username" placeholder="Nuevo usuario" />
+      <input type="password" id="register-password" placeholder="Contraseña" />
+      <button id="register-btn">Registrar</button>
+    </div>
+
+    <div class="card">
+      <h2>Consulta de Productos</h2>
+      <button id="get-products-btn">Ver Productos</button>
+      <ul id="products-list"></ul>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

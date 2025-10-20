@@ -7,6 +7,7 @@ from Models.database import db
 from flask_jwt_extended import JWTManager
 import os
 from Models.User_Model import User
+from Models.Token_Model import TokenBlocklist
 
 app = Flask(__name__, static_folder=None)
 app.config.from_object(Config)
@@ -58,6 +59,13 @@ with app.app_context():
 # Registrar los blueprints
 app.register_blueprint(product_bp, url_prefix="/api/products")
 app.register_blueprint(auth_bp, url_prefix="/api/auth")
+
+# Callback para verificar si un token está en la lista negra
+@jwt.token_in_blocklist_loader
+def check_if_token_revoked(jwt_header, jwt_payload):
+    jti = jwt_payload["jti"]
+    token = db.session.query(TokenBlocklist).filter_by(jti=jti).scalar()
+    return token is not None
 
 # Handler para errores de JWT
 @jwt.expired_token_loader

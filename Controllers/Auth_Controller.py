@@ -1,7 +1,13 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import (
+    create_access_token, create_refresh_token,
+    jwt_required, get_jwt_identity, get_jwt,
+    current_user
+)
 from Models.User_Model import User
+from Models.Token_Model import TokenBlocklist
 from Models.database import db
+from datetime import datetime, timezone
 
 auth_bp = Blueprint("auth_bp", __name__)
 
@@ -50,11 +56,14 @@ def login():
         user = User.query.filter_by(email=email).first()
 
         if user and user.check_password(password):
-            # Guardamos la id del usuario como subject (string) para evitar errores de decodificación
-            token = create_access_token(identity=str(user.id))
+            # Crear access token y refresh token
+            access_token = create_access_token(identity=str(user.id))
+            refresh_token = create_refresh_token(identity=str(user.id))
+            
             return jsonify({
                 "msg": "Inicio de sesión exitoso",
-                "access_token": token,
+                "access_token": access_token,
+                "refresh_token": refresh_token,
                 "user": user.to_dict()
             }), 200
         else:
@@ -121,3 +130,35 @@ def update_profile():
     except Exception as e:
         db.session.rollback()
         return jsonify({'msg': f'Error al actualizar: {str(e)}'}), 500
+
+# Refrescar token
+@auth_bp.route("/refresh", methods=["POST"])
+@jwt_required(refresh=True)
+def refresh():
+    try:
+        identity = get_jwt_identity()
+        access_token = create_access_token(identity=identity)
+        return jsonify({
+            "msg": "Token refrescado exitosamente",
+            "access_token": access_token
+        }), 200
+    except Exception as e:
+        return jsonify({"msg": f"Error al refrescar token: {str(e)}"}), 500
+
+# Cerrar sesión (invalidar token)
+@auth_bp.route("/logout", methods=["POST"])
+@jwt_required()
+def logout():
+    try:
+        jti = get_jwt()["jti"]
+        now = datetime.now(timezone.utc)
+        
+        # Añadir token a la lista negra
+        token_block = TokenBlocklist(jti=jti)
+        db.session.add(token_block)
+        db.session.commit()
+        
+        return jsonify({"msg": "Sesión cerrada exitosamente"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"msg": f"Error al cerrar sesión: {str(e)}"}), 500

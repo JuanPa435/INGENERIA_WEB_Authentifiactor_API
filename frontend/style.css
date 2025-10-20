@@ -1,10 +1,7 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #667eea, #764ba2);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
 }
 
@@ -50,12 +47,103 @@ h2 {
   color: #2d3748;
 }
 
-.auth-form .form-group { margin-bottom: 12px; text-align: left; }
-.auth-form label { font-size: 13px; color: #4a5568; display: block; margin-bottom: 6px; }
-.auth-form input, .auth-form select { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #e2e8f0; }
-.primary-btn { width: 100%; padding: 10px 12px; border-radius: 8px; background: #5a67d8; color: white; border: none; cursor: pointer; }
-.auth-footer { margin-top: 12px; text-align: center; font-size: 14px; }
-.form-message { margin-top: 8px; font-size: 13px; }
+/* Estilos comunes para formularios */
+.form-group, .auth-form .form-group { 
+    margin-bottom: 16px; 
+    text-align: left; 
+}
+
+.form-group label, .auth-form label { 
+    font-size: 14px; 
+    color: #4a5568; 
+    display: block; 
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.form-group input, 
+.form-group select,
+.auth-form input, 
+.auth-form select,
+.form-group textarea { 
+    width: 100%; 
+    padding: 12px 16px;
+    border-radius: 10px; 
+    border: 2px solid #e2e8f0;
+    background: #f8fafc;
+    font-size: 15px;
+    transition: all 0.2s ease;
+}
+
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+    border-color: #cbd5e0;
+    background: #fff;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #5a67d8;
+    background: #fff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(90,103,216,0.12);
+}
+
+.primary-btn { 
+    width: auto; 
+    min-width: 120px;
+    padding: 12px 24px;
+    border-radius: 10px;
+    background: #5a67d8;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.2s ease;
+}
+
+.primary-btn:hover {
+    background: #4c51bf;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(90,103,216,0.2);
+}
+
+.secondary-btn {
+    width: auto;
+    min-width: 120px;
+    padding: 11px 24px;
+    border-radius: 10px;
+    background: #fff;
+    color: #4a5568;
+    border: 2px solid #e2e8f0;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.2s ease;
+}
+
+.secondary-btn:hover {
+    border-color: #cbd5e0;
+    background: #f8fafc;
+}
+
+.auth-footer { 
+    margin-top: 16px; 
+    text-align: center; 
+    font-size: 14px; 
+}
+
+.form-message { 
+    margin-top: 12px; 
+    font-size: 14px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: #f7fafc;
+    border-left: 4px solid #4c51bf;
+}
 
 .icon-btn { position: absolute; right: 10px; top: 36px; background: transparent; border: none; cursor: pointer; padding: 6px; border-radius: 6px; }
 .icon-btn svg { display: block; }
@@ -191,4 +279,282 @@ a:hover {
 
 /* evitar que botones globales tomen el estilo de .primary-btn */
 .icon-btn, .icon-left { background: transparent; border: none; }
+
+/* Botón flotante para agregar producto */
+.add-product-fab {
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #48bb78;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+  border: none;
+  cursor: pointer;
+  z-index: 1200;
+  transition: all 0.3s ease;
+}
+
+.add-product-fab:hover {
+  transform: translateY(-2px);
+  background: #38a169;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.25);
+}
+
+.add-product-fab .material-icons { 
+  font-size: 32px;
+  transition: transform 0.3s ease;
+}
+
+.add-product-fab:hover .material-icons {
+  transform: rotate(180deg);
+}
+
+/* Modal mejorado */
+/* Modal base */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1150;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+/* Estado activo del modal */
+.modal[aria-hidden="false"] {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+.modal[aria-hidden="false"] { 
+    opacity: 1;
+    visibility: visible;
+}
+.modal-content { 
+    background: white; 
+    width: 96%; 
+    max-width: 520px; 
+    border-radius: 16px; 
+    padding: 32px; 
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    transform: translateY(20px);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    position: relative;
+    margin: 20px;
+}
+
+/* Animación cuando el modal está visible */
+.modal[aria-hidden="false"] .modal-content {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.modal-content h2 {
+    margin: 0 0 24px 0;
+    color: #2d3748;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.admin-edit-badge-modal {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    background: #5a67d8;
+    color: white;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 24px;
+}
+
+.modal-content .form-group {
+    margin-bottom: 20px;
+}
+
+.modal-content textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.modal-content .button-group {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 32px;
+}
+.modal[aria-hidden="false"] .modal-content {
+    transform: translateY(0);
+}
+.modal-content .close { 
+    position: absolute; 
+    right: 24px; 
+    top: 24px; 
+    background: transparent; 
+    border: none; 
+    font-size: 24px; 
+    cursor: pointer; 
+    color: #718096;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.modal-content .close:hover {
+    background: #f7fafc;
+    color: #2d3748;
+}
+
+/* Mejorar los estilos del formulario dentro del modal */
+.modal-content form {
+    margin-top: 16px;
+}
+
+.primary-btn { background: #6c5ce7; color: white; padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer; }
+.secondary-btn { background: transparent; border: 1px solid #cbd5e0; color: #4a5568; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
+
+/* Ajustes para product cards */
+.product-card { 
+    position: relative; 
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card.editable {
+    cursor: pointer;
+}
+
+.product-card.editable:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.product-card .edit-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    background: rgba(90,103,216,0.05);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.product-card .edit-overlay {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-card .edit-overlay .material-icons {
+    font-size: 24px;
+    color: #5a67d8;
+    opacity: 0.8;
+}
+
+.product-card .edit-overlay .admin-edit-badge {
+    font-size: 12px;
+    padding: 2px 8px;
+    background: #5a67d8;
+    color: white;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.product-card.editable:hover .edit-overlay {
+    opacity: 1;
+}
+
+.admin-controls { 
+    position: absolute; 
+    right: 12px; 
+    top: 12px; 
+    display: flex; 
+    gap: 8px;
+    z-index: 2;
+}
+
+/* Responsive layout para dashboard */
+.products-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 24px auto;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.product-card {
+  padding: 14px;
+  border-radius: 10px;
+}
+
+/* Titulos y texto */
+h1 { font-size: 22px; margin: 0; color: #fff; }
+
+@media (max-width: 768px) {
+  .products-container { padding: 12px; margin: 12px; }
+  .header { flex-direction: column; gap: 12px; }
+  .header-right { align-self: stretch; display:flex; justify-content: space-between; }
+  .stats-container { flex-direction: row; gap: 8px; overflow-x: auto; }
+  .product-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+  .modal-content { width: 95%; padding: 14px; }
+  .add-product-fab { right: 14px; bottom: 14px; width:48px; height:48px; }
+}
+
+@media (max-width: 420px) {
+  .product-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+  .product-card { padding: 10px; }
+  .product-details { flex-direction: column; gap: 8px; align-items: flex-start; }
+}
+
+/* Toast notifications */
+.toast-container {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 2000;
+}
+.toast {
+  background: rgba(17,24,39,0.95);
+  color: white;
+  padding: 10px 14px;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+  font-size: 14px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: all 220ms ease;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* Small modal open animation */
+.modal-content { transition: transform 180ms ease, opacity 180ms ease; }
+.modal[aria-hidden="false"] .modal-content { transform: translateY(0); opacity: 1; }
+.modal[aria-hidden="true"] .modal-content { transform: translateY(-6px); opacity: 0; }
 

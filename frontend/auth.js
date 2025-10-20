@@ -43,6 +43,11 @@ if (loginForm) {
             message.style.color = "green";
             message.textContent = "✅ Inicio de sesión exitoso";
             localStorage.setItem("token", data.access_token);
+            // guardar username localmente para mostrar en header
+            if (data.user && data.user.username) localStorage.setItem('username', data.user.username);
+            // si hay campo anon-name en el login, guardarlo
+            const anonInput = document.getElementById('anon-name-input');
+            if (anonInput && anonInput.value.trim()) localStorage.setItem('anon_name', anonInput.value.trim());
             setTimeout(() => (window.location.href = "dashboard.html"), 700);
           } else {
             message.style.color = "red";
@@ -96,6 +101,9 @@ if (registerForm) {
       if (response.ok) {
         message.style.color = "green";
         message.textContent = "✅ Usuario registrado correctamente.";
+        // si el formulario tiene campo anon-name, guardarlo
+        const anonInputR = document.getElementById('anon-name-input');
+        if (anonInputR && anonInputR.value.trim()) localStorage.setItem('anon_name', anonInputR.value.trim());
         setTimeout(() => (window.location.href = "login.html"), 900);
       } else {
         message.style.color = "red";

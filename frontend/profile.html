@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div style="max-width:600px;margin:40px auto;padding:32px;background:white;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,0.08);">
+        <h2 style="margin:0 0 24px 0;color:#2d3748;font-size:24px;">Editar Perfil</h2>
+        <form id="profile-form">
+            <div class="form-group">
+                <label for="username">Nombre de usuario</label>
+                <input 
+                    id="username" 
+                    placeholder="Tu nombre público" 
+                    autocomplete="username"
+                    required
+                >
+            </div>
+            <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px;">
+                <button id="cancel" type="button" class="secondary-btn">Cancelar</button>
+                <button type="submit" class="primary-btn">Guardar Cambios</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+    const API_BASE = window.location.origin + '/api';
+    const token = localStorage.getItem('token');
+
+    async function loadProfile(){
+        if (!token) {
+            alert('Necesitas iniciar sesión para editar el perfil');
+            window.location.href = 'login.html';
+            return;
+        }
+        try{
+            const res = await fetch(API_BASE + '/auth/user-info', { headers: { 'Authorization': 'Bearer ' + token } });
+            if (!res.ok) throw new Error('No autorizado');
+            const user = await res.json();
+            document.getElementById('username').value = user.username || '';
+        }catch(e){
+            console.error(e);
+            alert('Error al cargar perfil');
+        }
+    }
+
+    document.getElementById('cancel').addEventListener('click', ()=>{ window.location.href = 'dashboard.html'; });
+
+    document.getElementById('profile-form').addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        const username = document.getElementById('username').value.trim();
+        if (!username) return alert('El nombre de usuario no puede estar vacío');
+        try{
+            const res = await fetch(API_BASE + '/auth/profile', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                body: JSON.stringify({ username })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.msg || 'Error');
+            // actualizar display local
+            localStorage.setItem('username', username);
+            alert('Perfil actualizado');
+            window.location.href = 'dashboard.html';
+        }catch(e){
+            console.error(e);
+            alert('Error al guardar el perfil');
+        }
+    });
+
+    loadProfile();
+    </script>
+</body>
+</html>

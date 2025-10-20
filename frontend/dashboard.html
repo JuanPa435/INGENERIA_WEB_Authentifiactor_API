@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Inventario</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         .products-container {
             padding: 20px;
@@ -16,11 +17,108 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding: 10px 20px;
+            margin-bottom: 12px;
+            padding: 14px;
             background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+        }
+
+        .header-left {
+            flex: 1;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .stats-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .stat-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background-color: #f8fafc;
             border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .stat-box .material-icons {
+            color: #4a5568;
+            font-size: 24px;
+        }
+
+        .stat-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+        }
+
+        .filters select {
+            padding: 10px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #4a5568;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .no-products {
+            text-align: center;
+            padding: 40px;
+            background-color: white;
+            border-radius: 12px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .no-products .material-icons {
+            font-size: 48px;
+            color: #a0aec0;
+            margin-bottom: 10px;
+        }
+
+        .no-products p {
+            color: #4a5568;
+            margin-bottom: 20px;
         }
 
         .products-header {
@@ -77,18 +175,29 @@
             gap: 8px;
         }
 
-        .add-product-btn {
+                .add-product-btn {
+            align-items: center;
+            gap: 8px;
             background: #48bb78;
             color: white;
             border: none;
             padding: 8px 16px;
             border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s;
+            font-weight: 500;
+            margin-right: 10px;
+            display: flex; /* Cambiado a flex por defecto */
         }
 
         .add-product-btn:hover {
             background: #38a169;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .add-product-btn .material-icons {
+            font-size: 20px;
         }
 
         .edit-product-btn {
@@ -119,59 +228,7 @@
             background: #e53e3e;
         }
 
-        /* Modal para agregar/editar producto */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            margin: 15% auto;
-            padding: 20px;
-            border-radius: 8px;
-            width: 80%;
-            max-width: 500px;
-            position: relative;
-        }
-
-        .close {
-            position: absolute;
-            right: 15px;
-            top: 10px;
-            font-size: 1.5em;
-            cursor: pointer;
-            color: #718096;
-        }
-
-        .close:hover {
-            color: #2d3748;
-        }
-
-        .product-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .product-form input, .product-form textarea {
-            padding: 8px;
-            border: 1px solid #e2e8f0;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        .product-form input:focus, .product-form textarea:focus {
-            border-color: #4299e1;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
-        }
+                /* Estilos movidos a style.css */
 
         .logout-btn {
             background: #718096;
@@ -191,44 +248,122 @@
 <body>
     <div class="products-container">
         <div class="header">
-            <h1>Panel de Productos</h1>
-            <div>
-                <button id="add-product-btn" class="add-product-btn admin-controls">
-                    Agregar Producto
+            <div class="header-left">
+                <h1>Panel de Productos</h1>
+                <div class="stats-container">
+                    <div class="stat-box">
+                        <span class="material-icons">inventory_2</span>
+                        <div class="stat-info">
+                            <span class="stat-label">Total Productos</span>
+                            <span id="total-products" class="stat-value">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <span class="material-icons">warning</span>
+                        <div class="stat-info">
+                            <span class="stat-label">Bajo Stock</span>
+                            <span id="low-stock" class="stat-value">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <div id="user-display" style="display:flex;align-items:center;gap:10px;color:#4a5568;font-weight:600;">
+                    <a id="profile-link" href="profile.html" style="display:none;color:#4a5568;text-decoration:none;font-weight:600;"></a>
+                </div>
+                <button onclick="logout()" class="logout-btn">
+                    <span class="material-icons">logout</span>
+                    Cerrar Sesión
                 </button>
-                <button onclick="logout()" class="logout-btn">Cerrar Sesión</button>
+            </div>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" id="search-products" placeholder="Buscar productos...">
+            <div class="filters">
+                <select id="sort-by">
+                    <option value="name">Ordenar por Nombre</option>
+                    <option value="price-asc">Precio: Menor a Mayor</option>
+                    <option value="price-desc">Precio: Mayor a Menor</option>
+                    <option value="stock">Stock</option>
+                </select>
             </div>
         </div>
 
         <div id="products-grid" class="product-grid">
             <!-- Los productos se cargarán dinámicamente aquí -->
         </div>
+
+        <div id="no-products" class="no-products" style="display: none;">
+            <span class="material-icons">inventory</span>
+            <p>No hay productos disponibles en este momento</p>
+            <button id="add-first-product" class="add-product-btn" style="display:none;">
+                <span class="material-icons">add</span>
+                Agregar Primer Producto
+            </button>
+        </div>
     </div>
 
+    <!-- Botón flotante para agregar producto -->
+    <button id="add-product-btn" class="add-product-fab" title="Agregar Producto">
+        <span class="material-icons">add</span>
+    </button>
+
     <!-- Modal para agregar/editar producto -->
-    <div id="product-modal" class="modal">
+    <div id="product-modal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="modal-title">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2 id="modal-title">Agregar Producto</h2>
-            <form id="product-form" class="product-form">
+            <button class="close" aria-label="Cerrar">&times;</button>
+            <div style="display:flex;align-items:center;gap:12px;">
+                <h2 id="modal-title">Agregar Producto</h2>
+                <span class="admin-edit-badge-modal" style="display:none;">Editando como Admin</span>
+            </div>
+            <form id="product-form">
                 <input type="hidden" id="product-id">
-                <div>
-                    <label for="name">Nombre:</label>
-                    <input type="text" id="name" required>
+                <div class="form-group">
+                    <label for="name">Nombre del producto</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        required 
+                        placeholder="Ej: Camiseta de algodón"
+                        autocomplete="off"
+                    >
                 </div>
-                <div>
-                    <label for="description">Descripción:</label>
-                    <textarea id="description" rows="3"></textarea>
+                <div class="form-group">
+                    <label for="description">Descripción del producto</label>
+                    <textarea 
+                        id="description" 
+                        rows="4" 
+                        placeholder="Describe las características principales del producto..."
+                    ></textarea>
                 </div>
-                <div>
-                    <label for="price">Precio:</label>
-                    <input type="number" id="price" step="0.01" required>
+                <div style="display:flex;gap:16px;">
+                    <div class="form-group" style="flex:1;">
+                        <label for="price">Precio ($)</label>
+                        <input 
+                            type="number" 
+                            id="price" 
+                            step="0.01" 
+                            required 
+                            placeholder="0.00"
+                            min="0"
+                        >
+                    </div>
+                    <div class="form-group" style="width:130px;">
+                        <label for="stock">Stock</label>
+                        <input 
+                            type="number" 
+                            id="stock" 
+                            required 
+                            placeholder="0"
+                            min="0"
+                        >
+                    </div>
                 </div>
-                <div>
-                    <label for="stock">Stock:</label>
-                    <input type="number" id="stock" required>
+                <div class="button-group">
+                    <button type="button" class="secondary-btn" id="cancel-btn">Cancelar</button>
+                    <button type="submit" class="primary-btn">Guardar Cambios</button>
                 </div>
-                <button type="submit" class="primary-btn">Guardar</button>
             </form>
         </div>
     </div>
